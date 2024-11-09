@@ -2,19 +2,12 @@ const express = require('express')
 const app = express()
 const morgan = require('morgan')
 const cors = require('cors')
-const mongoose = require('mongoose')
 
-const password = process.argv[2]
-// const url = 
-mongoose.set('strictQuery', false)
-mongoose.connect(url)
 
-const personSchema = new mongoose.Schema({
-  name: String,
-  number: String,
-})
 
-const Person = mongoose.model('Person', personSchema)
+
+
+const Person = require('./models/contacts')
 
 app.use(cors())
 app.use(express.json())
@@ -72,7 +65,10 @@ app.get('/info', (request, response)=>{
 })
 
 app.get('/api/persons', (request, response)=>{
-	response.json(persons)
+    Person.find({}).then(people=>{
+    response.json(people)
+  })
+	
 })
 
 app.get('/api/persons/:id', (request, response)=>{
