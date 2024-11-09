@@ -83,27 +83,44 @@ app.get('/api/persons/:id', (request, response)=>{
 })
 
 app.post('/api/persons', (request,response)=>{
-    const person = request.body
+    const body = request.body
 
-    const contactExists = persons.some((x)=>x.name === person.name)
-   // const numberExists = person.some((x)=>x.number === person.number) 
+    if (body.name === undefined){
+      return response.status(400).json({
+        error: 'Name is missing'
+      })
+    }
+
+    const person = new Person({
+      name: body.name,
+      number: body.name,
+    })
+
+    person.save().then(
+      savedPerson =>{
+          response.json(savedPerson)
+      }
+    )
+
+  //   const contactExists = persons.some((x)=>x.name === person.name)
+  //  // const numberExists = person.some((x)=>x.number === person.number) 
       
-      if (!contactExists && person.number !== ''){
-              person.id = String(Math.floor(Math.random()*1000))
-              persons = persons.concat(person)
-              response.json(person)
+  //     if (!contactExists && person.number !== ''){
+  //             person.id = String(Math.floor(Math.random()*1000))
+  //             persons = persons.concat(person)
+  //             response.json(person)
            
-        }else if(contactExists) {
-          console.log("Contact already exists")
-          return response.status(400).json({
-            error:'name must be unique'
-          })
-        }else if(!person.number){
-          console.log("Missing number")
-          return response.status(400).json({
-            error:'number missing'
-          })
-        }
+  //       }else if(contactExists) {
+  //         console.log("Contact already exists")
+  //         return response.status(400).json({
+  //           error:'name must be unique'
+  //         })
+  //       }else if(!person.number){
+  //         console.log("Missing number")
+  //         return response.status(400).json({
+  //           error:'number missing'
+  //         })
+  //       }
     
 })
 
